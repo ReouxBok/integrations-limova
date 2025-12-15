@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { integrations, integrationCategories } from "@/lib/integrations-data";
+import { allIntegrations, integrationCategories, Integration } from "@/lib/integrations-full-data";
 
 const Integrations = () => {
   const { t, language } = useLanguage();
@@ -18,17 +18,17 @@ const Integrations = () => {
   const currentCategory = integrationCategories.find(c => c.id === selectedCategory);
 
   const filteredIntegrations = useMemo(() => {
-    return integrations.filter((integration) => {
+    return allIntegrations.filter((integration) => {
       const matchesSearch =
         integration.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        integration.description[language].toLowerCase().includes(searchQuery.toLowerCase());
+        integration.slug.toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesCategory =
         selectedCategory === "all" || integration.categoryId === selectedCategory;
 
       return matchesSearch && matchesCategory;
     });
-  }, [searchQuery, selectedCategory, language]);
+  }, [searchQuery, selectedCategory]);
 
   const popularIntegrations = filteredIntegrations.filter(i => i.isPopular);
   const otherIntegrations = filteredIntegrations.filter(i => !i.isPopular);
@@ -111,7 +111,7 @@ const Integrations = () => {
 };
 
 interface IntegrationCardProps {
-  integration: typeof integrations[0];
+  integration: Integration;
   language: "fr" | "en";
 }
 
