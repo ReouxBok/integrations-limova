@@ -72,9 +72,11 @@ const brandColors: Record<string, { bg: string; text: string }> = {
   bigcommerce: { bg: "bg-[#121118]", text: "text-white" },
 };
 
-// Logo URLs from reliable CDNs
-const getLogoUrl = (slug: string): string => {
-  // Use Simple Icons CDN for known brands
+// Logo URLs from multiple reliable CDNs with fallback chain
+const getLogoUrls = (slug: string): string[] => {
+  const urls: string[] = [];
+  
+  // Simple Icons CDN for known brands
   const simpleIconsMap: Record<string, string> = {
     openai: "openai",
     anthropic: "anthropic",
@@ -161,15 +163,251 @@ const getLogoUrl = (slug: string): string => {
     monday: "monday",
     basecamp: "basecamp",
     wrike: "wrike",
+    calendly_v2: "calendly",
+    canva: "canva",
+    adobe_pdf_services: "adobe",
+    mailgun: "mailgun",
+    postmark: "postmarkapp",
+    amazon_ses: "amazonses",
+    braintree: "braintree",
+    quickbooks: "quickbooks",
+    xero_accounting_api: "xero",
+    freshbooks: "freshbooks",
+    zoho_crm: "zoho",
+    pipedrive: "pipedrive",
+    copper: "copper",
+    close: "close",
+    docusign: "docusign",
+    pandadoc: "pandadoc",
+    calendly: "calendly",
+    acuity_scheduling: "acuityscheduling",
+    zapier: "zapier",
+    make: "make",
+    n8n: "n8n",
+    ifttt: "ifttt",
+    segment: "segment",
+    hotjar: "hotjar",
+    crazyegg: "crazyegg",
+    google_tag_manager: "googletagmanager",
+    facebook: "facebook",
+    instagram: "instagram",
+    tiktok: "tiktok",
+    snapchat: "snapchat",
+    buffer: "buffer",
+    hootsuite: "hootsuite",
+    later: "later",
+    sprout_social: "sproutsocial",
+    miro: "miro",
+    loom: "loom",
+    coda: "coda",
+    airtable: "airtable",
+    smartsheet: "smartsheet",
+    workday: "workday",
+    bamboohr: "bamboohr",
+    gusto: "gusto",
+    rippling: "rippling",
+    greenhouse: "greenhouse",
+    lever: "lever",
+    workable: "workable",
+    jazz_hr: "jazzhr",
+    atlassian: "atlassian",
+    confluence: "confluence",
+    bitbucket_data_center: "bitbucket",
+    opsgenie: "opsgenie",
+    pagerduty: "pagerduty",
+    statuspage: "statuspageio",
+    newrelic: "newrelic",
+    splunk: "splunk",
+    grafana: "grafana",
+    prometheus: "prometheus",
+    terraform: "terraform",
+    ansible: "ansible",
+    pulumi: "pulumi",
+    vault: "vault",
+    consul: "consul",
+    nomad: "nomad",
+    kong: "kong",
+    nginx: "nginx",
+    apache: "apache",
+    rabbitmq: "rabbitmq",
+    kafka: "apachekafka",
+    airflow: "apacheairflow",
+    spark: "apachespark",
+    hadoop: "apachehadoop",
+    databricks: "databricks",
+    snowflake: "snowflake",
+    dbt: "dbt",
+    looker: "looker",
+    tableau: "tableau",
+    powerbi: "powerbi",
+    metabase: "metabase",
+    superset: "apachesuperset",
+    retool: "retool",
+    appsmith: "appsmith",
+    plasmic: "plasmic",
+    framer: "framer",
+    sketch: "sketch",
+    invision: "invision",
+    zeplin: "zeplin",
+    abstract: "abstract",
+    marvel: "marvel",
+    principle: "principle",
+    proto_io: "protoio",
+    balsamiq: "balsamiq",
+    lucid: "lucid",
+    mural: "mural",
+    stormboard: "stormboard",
+    microsoft_azure: "microsoftazure",
+    google_cloud_platform: "googlecloud",
+    alibaba_cloud: "alibabacloud",
+    oracle_cloud: "oracle",
+    ibm_cloud: "ibmcloud",
+    vultr: "vultr",
+    linode: "linode",
+    render: "render",
+    railway: "railway",
+    fly_io: "flydotio",
+    deno: "deno",
+    bun: "bun",
+    nodejs: "nodedotjs",
+    python: "python",
+    ruby: "ruby",
+    go: "go",
+    rust: "rust",
+    java: "java",
+    kotlin: "kotlin",
+    swift: "swift",
+    typescript: "typescript",
+    javascript: "javascript",
+    react: "react",
+    vue: "vuedotjs",
+    angular: "angular",
+    svelte: "svelte",
+    nextjs: "nextdotjs",
+    nuxt: "nuxtdotjs",
+    gatsby: "gatsby",
+    remix: "remix",
+    astro: "astro",
+    eleventy: "eleventy",
+    hugo: "hugo",
+    jekyll: "jekyll",
   };
   
   const simpleIconSlug = simpleIconsMap[slug];
   if (simpleIconSlug) {
-    return `https://cdn.simpleicons.org/${simpleIconSlug}`;
+    urls.push(`https://cdn.simpleicons.org/${simpleIconSlug}`);
   }
   
-  // Fallback to Pipedream URL
-  return `https://pipedream.com/s.v0/${slug.replace(/_/g, '-')}/logo/48`;
+  // Clearbit Logo API (works for many company domains)
+  const clearbitMap: Record<string, string> = {
+    openai: "openai.com",
+    anthropic: "anthropic.com",
+    notion: "notion.so",
+    slack_v2: "slack.com",
+    google_sheets: "google.com",
+    gmail: "gmail.com",
+    hubspot: "hubspot.com",
+    airtable_oauth: "airtable.com",
+    trello: "trello.com",
+    discord: "discord.com",
+    github: "github.com",
+    stripe: "stripe.com",
+    google_drive: "google.com",
+    salesforce_rest_api: "salesforce.com",
+    mailchimp: "mailchimp.com",
+    typeform: "typeform.com",
+    asana: "asana.com",
+    jira: "atlassian.com",
+    shopify: "shopify.com",
+    twilio: "twilio.com",
+    sendgrid: "sendgrid.com",
+    supabase: "supabase.com",
+    zoom: "zoom.us",
+    microsoft_teams: "microsoft.com",
+    dropbox: "dropbox.com",
+    clickup: "clickup.com",
+    linear: "linear.app",
+    zendesk: "zendesk.com",
+    intercom: "intercom.com",
+    figma: "figma.com",
+    webflow: "webflow.com",
+    netlify: "netlify.com",
+    vercel_token_auth: "vercel.com",
+    paypal: "paypal.com",
+    linkedin: "linkedin.com",
+    youtube_data_api: "youtube.com",
+    twitch: "twitch.tv",
+    reddit: "reddit.com",
+    pinterest: "pinterest.com",
+    spotify: "spotify.com",
+    mixpanel: "mixpanel.com",
+    amplitude: "amplitude.com",
+    freshdesk: "freshdesk.com",
+    woocommerce: "woocommerce.com",
+    gitlab: "gitlab.com",
+    bitbucket: "bitbucket.org",
+    circleci: "circleci.com",
+    datadog: "datadoghq.com",
+    sentry: "sentry.io",
+    heroku: "heroku.com",
+    cloudflare_api_key: "cloudflare.com",
+    todoist: "todoist.com",
+    evernote: "evernote.com",
+    box: "box.com",
+    activecampaign: "activecampaign.com",
+    convertkit: "convertkit.com",
+    monday: "monday.com",
+    basecamp: "basecamp.com",
+    wrike: "wrike.com",
+    canva: "canva.com",
+    mailgun: "mailgun.com",
+    braintree: "braintreegateway.com",
+    quickbooks: "quickbooks.intuit.com",
+    xero_accounting_api: "xero.com",
+    freshbooks: "freshbooks.com",
+    zoho_crm: "zoho.com",
+    pipedrive: "pipedrive.com",
+    docusign: "docusign.com",
+    calendly_v2: "calendly.com",
+    zapier: "zapier.com",
+    segment: "segment.com",
+    hotjar: "hotjar.com",
+    facebook: "facebook.com",
+    instagram: "instagram.com",
+    buffer: "buffer.com",
+    miro: "miro.com",
+    loom: "loom.com",
+    coda: "coda.io",
+    smartsheet: "smartsheet.com",
+    bamboohr: "bamboohr.com",
+    greenhouse: "greenhouse.io",
+    lever: "lever.co",
+    confluence: "atlassian.com",
+    pagerduty: "pagerduty.com",
+    newrelic: "newrelic.com",
+    grafana: "grafana.com",
+    databricks: "databricks.com",
+    snowflake: "snowflake.com",
+    looker: "looker.com",
+    tableau: "tableau.com",
+    metabase: "metabase.com",
+    retool: "retool.com",
+    sketch: "sketch.com",
+    invision: "invisionapp.com",
+    mural: "mural.co",
+    render: "render.com",
+    railway: "railway.app",
+  };
+  
+  const clearbitDomain = clearbitMap[slug];
+  if (clearbitDomain) {
+    urls.push(`https://logo.clearbit.com/${clearbitDomain}`);
+  }
+  
+  // Pipedream's own logo CDN (fallback)
+  urls.push(`https://pipedream.com/s.v0/${slug.replace(/_/g, '-')}/logo/48`);
+  
+  return urls;
 };
 
 interface IntegrationLogoProps {
@@ -186,8 +424,8 @@ const sizeClasses = {
 };
 
 export const IntegrationLogo = ({ slug, name, size = "md", className }: IntegrationLogoProps) => {
-  const [imgError, setImgError] = useState(false);
-  const logoUrl = getLogoUrl(slug);
+  const [currentUrlIndex, setCurrentUrlIndex] = useState(0);
+  const logoUrls = getLogoUrls(slug);
   const sizes = sizeClasses[size];
   
   // Get brand color or fallback to letter-based color
@@ -196,7 +434,18 @@ export const IntegrationLogo = ({ slug, name, size = "md", className }: Integrat
   const bgColor = brandStyle?.bg || colorPalette[firstLetter] || "bg-primary";
   const textColor = brandStyle?.text || "text-white";
 
-  if (imgError) {
+  const handleError = () => {
+    // Try next URL in the fallback chain
+    if (currentUrlIndex < logoUrls.length - 1) {
+      setCurrentUrlIndex(prev => prev + 1);
+    } else {
+      // All URLs failed, show fallback
+      setCurrentUrlIndex(-1);
+    }
+  };
+
+  // Show letter fallback if all URLs failed
+  if (currentUrlIndex === -1 || logoUrls.length === 0) {
     return (
       <div className={cn(
         sizes.container,
@@ -217,10 +466,10 @@ export const IntegrationLogo = ({ slug, name, size = "md", className }: Integrat
       className
     )}>
       <img
-        src={logoUrl}
+        src={logoUrls[currentUrlIndex]}
         alt={name}
         className={cn(sizes.icon, "object-contain")}
-        onError={() => setImgError(true)}
+        onError={handleError}
         loading="lazy"
       />
     </div>
