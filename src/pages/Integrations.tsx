@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Search, Blocks, Star, SlidersHorizontal, ArrowUpDown, ArrowDownAZ, ArrowUpAZ, Sparkles, Filter } from "lucide-react";
+import { Search, Star, SlidersHorizontal, ArrowUpDown, ArrowDownAZ, ArrowUpAZ, Sparkles, Filter } from "lucide-react";
 import { useState } from "react";
 import MainLayout from "@/components/layout/MainLayout";
 import { Input } from "@/components/ui/input";
@@ -86,30 +86,29 @@ const Integrations = () => {
 
   return (
     <MainLayout title={pageTitle}>
-      <div className="space-y-6">
-        {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
-            <Blocks className="w-8 h-8 text-primary" />
-            {pageTitle}
+      <div className="space-y-8">
+        {/* Hero Section */}
+        <div className="text-center py-8 space-y-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">
+            {t("Le catalogue d'intégrations IA", "The AI toolkit for integrations")}
           </h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             {t(
-              `${filteredAndSortedIntegrations.length} intégrations disponibles avec prompts prêts à l'emploi`,
-              `${filteredAndSortedIntegrations.length} integrations available with ready-to-use prompts`
+              `Plus de ${allIntegrations.length.toLocaleString()} intégrations avec des prompts prêts à l'emploi. Automatisez vos workflows en quelques clics.`,
+              `Add ${allIntegrations.length.toLocaleString()}+ APIs and tools to your AI assistant. Connect your accounts securely.`
             )}
           </p>
         </div>
 
-        {/* Search and Filters */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+        {/* Search and Filters Bar */}
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+          <div className="relative w-full max-w-xl">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
             <Input
-              placeholder={t("Rechercher une intégration...", "Search an integration...")}
+              placeholder={t("Rechercher une intégration...", "Search apps...")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-12 h-12 text-base rounded-xl border-border/50 bg-background shadow-sm"
             />
           </div>
 
@@ -117,10 +116,9 @@ const Integrations = () => {
             {/* Sort Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="default" className="gap-2">
+                <Button variant="outline" size="lg" className="gap-2 rounded-xl h-12 px-4">
                   <ArrowUpDown className="w-4 h-4" />
                   <span className="hidden sm:inline">{sortLabels[sortBy][language]}</span>
-                  <span className="sm:hidden">{t("Trier", "Sort")}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
@@ -160,8 +158,8 @@ const Integrations = () => {
               <DropdownMenuTrigger asChild>
                 <Button 
                   variant={showOnlyPopular ? "default" : "outline"} 
-                  size="default" 
-                  className="gap-2"
+                  size="lg" 
+                  className="gap-2 rounded-xl h-12 px-4"
                 >
                   <Filter className="w-4 h-4" />
                   <span className="hidden sm:inline">{t("Filtres", "Filters")}</span>
@@ -175,39 +173,39 @@ const Integrations = () => {
                   onCheckedChange={setShowOnlyPopular}
                 >
                   <Star className="w-4 h-4 mr-2 text-amber-500" />
-                  {t("Intégrations populaires uniquement", "Popular integrations only")}
+                  {t("Populaires uniquement", "Popular only")}
                 </DropdownMenuCheckboxItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>
 
-        {/* Active filters display */}
-        {showOnlyPopular && (
-          <div className="flex gap-2 flex-wrap">
-            <Badge variant="secondary" className="gap-1 cursor-pointer" onClick={() => setShowOnlyPopular(false)}>
-              <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
-              {t("Populaires uniquement", "Popular only")}
-              <span className="ml-1">×</span>
-            </Badge>
-          </div>
-        )}
+        {/* Results count */}
+        <div className="text-sm text-muted-foreground">
+          {filteredAndSortedIntegrations.length} {t("intégrations", "integrations")}
+          {selectedCategory !== "all" && ` • ${currentCategory?.label[language]}`}
+        </div>
 
         {/* Integrations Grid */}
         {filteredAndSortedIntegrations.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredAndSortedIntegrations.map((integration) => (
               <IntegrationCard key={integration.id} integration={integration} language={language} />
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <Blocks className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <p className="text-muted-foreground">
+          <div className="text-center py-16">
+            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+              <Search className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <h3 className="text-lg font-medium text-foreground mb-2">
               {t("Aucune intégration trouvée", "No integration found")}
+            </h3>
+            <p className="text-muted-foreground mb-4">
+              {t("Essayez un autre terme de recherche", "Try a different search term")}
             </p>
             {showOnlyPopular && (
-              <Button variant="link" onClick={() => setShowOnlyPopular(false)} className="mt-2">
+              <Button variant="outline" onClick={() => setShowOnlyPopular(false)}>
                 {t("Afficher toutes les intégrations", "Show all integrations")}
               </Button>
             )}
@@ -224,30 +222,49 @@ interface IntegrationCardProps {
 }
 
 const IntegrationCard = ({ integration, language }: IntegrationCardProps) => {
+  const { t } = useLanguage();
+  
+  // Generate a more descriptive text
+  const getDescription = () => {
+    const baseDesc = integration.description[language];
+    if (baseDesc.length > 50) return baseDesc;
+    return `${integration.name} ${t("vous permet d'automatiser vos workflows et de connecter vos outils favoris.", "allows you to automate your workflows and connect your favorite tools.")}`;
+  };
+
   return (
     <Link to={`/integration/${integration.slug}`}>
-      <Card className="group hover:shadow-lg transition-all duration-300 hover:border-primary/50 cursor-pointer h-full">
-        <CardContent className="p-4">
-          <div className="flex items-start gap-3">
-            <IntegrationLogo 
-              slug={integration.slug} 
-              name={integration.name} 
-              size="md"
-            />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors truncate">
-                  {integration.name}
-                </h3>
-                {integration.isPopular && (
-                  <Star className="w-3 h-3 text-amber-500 fill-amber-500 shrink-0" />
-                )}
+      <Card className="group hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 hover:border-primary/30 cursor-pointer h-full bg-card/50 backdrop-blur-sm border-border/50">
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            {/* Header with logo and name */}
+            <div className="flex items-center gap-4">
+              <IntegrationLogo 
+                slug={integration.slug} 
+                name={integration.name} 
+                size="lg"
+                className="rounded-xl"
+              />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors truncate">
+                    {integration.name}
+                  </h3>
+                  {integration.isPopular && (
+                    <Star className="w-4 h-4 text-amber-500 fill-amber-500 shrink-0" />
+                  )}
+                </div>
               </div>
-              <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
-                {integration.description[language]}
-              </p>
-              <Badge variant="outline" className="text-xs">
-                {integration.actions.length} actions
+            </div>
+            
+            {/* Description */}
+            <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
+              {getDescription()}
+            </p>
+            
+            {/* Category badge */}
+            <div className="pt-2">
+              <Badge variant="secondary" className="text-xs font-normal">
+                {integration.category[language]}
               </Badge>
             </div>
           </div>
