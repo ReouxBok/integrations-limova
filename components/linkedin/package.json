@@ -1,0 +1,20 @@
+{
+  "name": "@pipedream/linkedin",
+  "version": "1.2.5",
+  "description": "Pipedream Linkedin Components",
+  "main": "linkedin.app.mjs",
+  "keywords": [
+    "pipedream",
+    "linkedin"
+  ],
+  "homepage": "https://pipedream.com/apps/linkedin",
+  "author": "Pipedream <support@pipedream.com> (https://pipedream.com/)",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@pipedream/platform": "^3.1.1",
+    "axios": "^1.12.0",
+    "form-data": "^4.0.4"
+  }
+}

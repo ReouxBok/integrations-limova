@@ -1,0 +1,20 @@
+{
+  "name": "@pipedream/google_docs",
+  "version": "0.6.3",
+  "description": "Pipedream Google_docs Components",
+  "main": "google_docs.app.mjs",
+  "keywords": [
+    "pipedream",
+    "google_docs"
+  ],
+  "homepage": "https://pipedream.com/apps/google_docs",
+  "author": "Pipedream <support@pipedream.com> (https://pipedream.com/)",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@googleapis/docs": "^3.3.0",
+    "@pipedream/google_drive": "^1.4.1",
+    "markdown-it": "^14.1.0"
+  }
+}
