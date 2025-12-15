@@ -12,7 +12,7 @@ const Header = ({ title }: HeaderProps) => {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="h-14 lg:h-16 border-b border-border bg-card/95 backdrop-blur-sm flex items-center justify-between px-4 sm:px-6 lg:px-8 flex-shrink-0 z-30">
+    <header className="h-14 lg:h-16 bg-background flex items-center justify-between px-4 sm:px-6 lg:px-8 flex-shrink-0 z-30">
       <h1 className="text-lg lg:text-xl font-semibold text-foreground truncate">{title}</h1>
       
       <div className="flex items-center gap-1 sm:gap-2">

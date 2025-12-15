@@ -16,22 +16,25 @@ const Sidebar = () => {
 
   const currentCategoryId = params.categoryId || (location.pathname === "/" ? "all" : null);
 
+  // Filter out "all" category
+  const filteredCategories = integrationCategories.filter(cat => cat.id !== "all");
+
   const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => (
     <>
-      <div className="p-6 pb-8">
+      <div className="h-14 lg:h-16 flex items-center px-6">
         <Link to="/" className="flex items-center gap-2" onClick={onNavigate}>
           <img src={limovaLogo} alt="Limova" className="h-8" />
         </Link>
       </div>
 
-      <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-4 space-y-1 overflow-y-auto pt-4">
         <h3 className="px-3 pb-3 text-sm font-semibold text-foreground">
           {t("Catégories", "Categories")}
         </h3>
 
-        {integrationCategories.map((category) => {
+        {filteredCategories.map((category) => {
           const isActive = currentCategoryId === category.id;
-          const path = category.id === "all" ? "/" : `/category/${category.id}`;
+          const path = `/category/${category.id}`;
           
           return (
             <Link
@@ -60,7 +63,7 @@ const Sidebar = () => {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-60 bg-background border-r border-border/50 flex-col z-40">
+      <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-60 bg-background flex-col z-40">
         <SidebarContent />
       </aside>
 
