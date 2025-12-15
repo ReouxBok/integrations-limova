@@ -393,14 +393,14 @@ const getSpecificActions = (slug: string, integrationName: string): IntegrationA
 // Generate a single integration object
 const generateIntegration = (slug: string): Integration => {
   const name = formatName(slug);
-  const categoryId = getCategoryId(slug);
+  const categoryId = getCategoryFromSlug(slug);
   const categoryLabel = getCategoryLabel(categoryId);
   const isPopular = popularSlugs.includes(slug);
   
   // Get specific actions or generate defaults
   let actions = getSpecificActions(slug, name);
   if (actions.length === 0) {
-    actions = generateDefaultActions(name, slug);
+    actions = getActionsForIntegration(slug, name);
   }
   
   return {
