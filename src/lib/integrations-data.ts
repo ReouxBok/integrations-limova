@@ -283,78 +283,19 @@ const getCategoryForIntegration = (slug: string): { id: string; fr: string; en: 
   return categoryMap[slug] || { id: "other", fr: "Autres", en: "Other" };
 };
 
+// Import all integration slugs from components folder
+import { allIntegrationSlugs } from "./all-integration-slugs";
+
 // Popular integrations (shown first)
 const popularSlugs = [
-  "openai", "notion", "slack_v2", "google_sheets", "gmail", "hubspot", 
-  "airtable_oauth", "trello", "discord", "github", "stripe", "zapier",
-  "google_drive", "google_calendar", "salesforce_rest_api", "mailchimp",
-  "typeform", "asana", "jira", "shopify", "twilio", "sendgrid",
-  "supabase", "postgresql", "mongodb", "anthropic", "telegram_bot_api",
-  "zoom", "microsoft_teams", "dropbox", "clickup", "linear"
+  "openai", "anthropic", "notion", "slack_v2", "google_sheets", "gmail", "hubspot", 
+  "airtable_oauth", "trello", "discord", "github", "stripe", "google_drive", 
+  "google_calendar", "salesforce_rest_api", "mailchimp", "typeform", "asana", 
+  "jira", "shopify", "twilio", "sendgrid", "supabase", "postgresql", "mongodb", 
+  "telegram_bot_api", "zoom", "microsoft_teams", "dropbox", "clickup", "linear",
+  "zapier", "zendesk", "intercom", "klaviyo", "figma", "webflow", "firebase_admin_sdk",
+  "aws", "vercel_token_auth", "netlify", "paypal", "whatsapp_business", "linkedin"
 ];
-
-// All integration slugs from Pipedream
-const allIntegrationSlugs = [
-  "openai", "notion", "anthropic", "google_sheets", "telegram_bot_api", "google_drive", 
-  "google_calendar", "shopify_developer_app", "supabase", "mysql", "postgresql", "aws", 
-  "sendgrid", "amazon_ses", "klaviyo", "zendesk", "servicenow", "slack_v2", "microsoft_teams", 
-  "salesforce_rest_api", "hubspot", "zoho_crm", "stripe", "woocommerce", "snowflake", 
-  "mongodb", "pinterest", "azure_openai_service", "github", "formatting", "exa", 
-  "airtable_oauth", "zoom", "gmail", "zoom_admin", "twilio", "youtube_data_api", 
-  "spotify", "google_forms", "typeform", "helper_functions", "jotform", "dropbox", 
-  "trello", "firebase_admin_sdk", "discord", "google", "reddit", "shopify", 
-  "mailchimp", "discord_bot", "mailgun", "jira", "twitch", "google_analytics", 
-  "linkedin", "netlify", "activecampaign", "google_cloud", "asana", "pipedrive", 
-  "gitlab", "bitbucket", "google_docs", "webflow", "pushover", "todoist", 
-  "faunadb", "microsoft_graph_api", "clickup", "slack_bot", "dev_to", "amazon", 
-  "intercom", "sendinblue", "line_messaging_api", "line", "giphy", "blogger", 
-  "calendly_v2", "ifttt", "people_data_labs", "monday", "coda", "pushbullet", 
-  "figma", "coinbase", "google_dialogflow", "bitly", "wordpress_com", "strava", 
-  "heroku", "wordpress_org", "mailerlite", "cloudflare_api_key", "formstack", 
-  "postmark", "google_tasks", "ssh", "segment", "ipdata_co", "raindrop", "imgbb", 
-  "browserless", "shipstation", "onesignal_rest_api", "openweather_api", "sentry", 
-  "algolia", "mautic", "mandrill", "xero_accounting_api", "google_classroom", 
-  "zoho_books", "sftp_password_based_auth", "zoho_creator", "dynamics_365_business_central_api", 
-  "google_search_console", "basecamp", "pipefy", "wrike", "box", "ghost_org_admin_api", 
-  "clicksend", "quickbooks", "whatsapp_business", "supersaas", "product_hunt", 
-  "pagerduty", "telnyx", "sftp", "toggl", "chargebee", "datadog", "bubble", 
-  "convertkit", "ghost_org_content_api", "paypal", "cloudinary", "memberstack", 
-  "waboxapp", "message_bird", "customer_io", "zoho_mail", "thinkific", 
-  "stack_exchange", "vercel_token_auth", "clearbit", "gorgias_oauth", "instapaper", 
-  "circleci", "infobip", "ortto", "wit_ai", "ringcentral", "linear", "kvdb", 
-  "shortcut", "linear_app", "eventbrite", "here", "storyblok", "webinarjam", 
-  "pinboard", "moosend", "teamwork", "fibery", "rocketreach", "auth0_management_api", 
-  "pocket", "erpnext", "alpha_vantage", "invoice_ninja", "cloud_convert", "clockify", 
-  "coinmarketcap", "bexio", "pusher", "bunnycdn", "rockset", "silfer_bots", 
-  "you_need_a_budget", "msg91", "algorithmia", "microsoft_onedrive", "alpaca", 
-  "acuity_scheduling", "youtube_analytics_api", "meistertask", "shipengine", 
-  "sendpulse", "remove_bg", "ssh_password_based_auth", "foursquare", "drift", 
-  "goodreads", "harry_potter_api", "plivo", "lifx", "smugmug", "chargify", 
-  "google_cloud_translate", "dribbble", "discourse", "vimeo", "streamlabs", 
-  "sendfox_personal_access_token", "datarobot", "assembla", "baremetrics", "procore", 
-  "contentful", "buildkite", "remotelock", "influxdb_cloud", "freelancer", "textlocal", 
-  "rev_ai", "abstract_ip_geo", "moneybird", "cisco_webex", "awork", "bannerbear", 
-  "phrase", "everwebinar", "geocodio", "launchdarkly", "neverbounce", "lawmatics", 
-  "revel_systems", "cobalt", "onesignal_user_auth", "linkish", "flexie", "bigcommerce", 
-  "adversus", "unity_cloud_build", "gitter", "thanks_io", "rebrandly", "outreach", 
-  "sendoso", "frontapp", "printful_oauth", "greenhouse", "gitea", "monkeylearn", 
-  "contacts", "harvest", "full_contact", "new_relic", "workboard", "quickbooks_sandbox", 
-  "loyaltylion", "payhere", "printful", "docupilot", "polygon", "accuranker", 
-  "travis_ci", "ibm_cloud_speech_to_text", "contentful_graphql", "sslmate_cert_spotter_api", 
-  "quipu", "datawaves", "lusha", "directus", "okta", "lemon_squeezy", "easy_project", 
-  "yoast_seo", "user_com", "easy_projects", "commercehq", "seventodos", "yanado", 
-  "apify", "dokan", "formtitan", "groundhogg", "dpd2", "convenia", "tutor_lms", 
-  "lifterlms", "detectify", "klenty", "teamleader_focus", "smaily", "cloudcart", 
-  "mumara", "fluent_support", "revamp_crm", "planso_forms", "triggercmd", "coassemble", 
-  "textit", "sendloop", "rippling", "youcanbook_me", "digistore24", "recurly", 
-  "t2m_url_shortener", "simple_analytics", "junip", "optimoroute", "supportivekoala", 
-  "tidy", "bugherd", "lattice", "sapling_ai", "form_io", "geckoboard", "nasa", 
-  "sendowl", "uipath_automation_hub", "leadfeeder", "snipcart", "replicate", 
-  "vivifyscrum", "mode", "wire2air", "gtmetrix", "followup", "cohere_platform", 
-  "new_york_times", "delighted", "levity", "sportsdata", "jira_service_desk", 
-  "transloadit", "proprofs_knowledge_base", "smartsuite", "brandmentions", "whosonlocation"
-];
-
 // Integration name formatting
 const formatIntegrationName = (slug: string): string => {
   const nameMap: Record<string, string> = {
