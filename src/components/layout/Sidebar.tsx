@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { integrationCategories } from "@/lib/integrations-data";
+import { integrationCategories, getCategoryCounts } from "@/lib/integrations-full-data";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Blocks,
@@ -38,6 +38,7 @@ const Sidebar = () => {
   const [open, setOpen] = useState(false);
 
   const currentCategoryId = params.categoryId || (location.pathname === "/" ? "all" : null);
+  const categoryCounts = getCategoryCounts();
 
   const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => (
     <>
@@ -58,6 +59,7 @@ const Sidebar = () => {
           const IconComponent = iconMap[category.icon] || Blocks;
           const isActive = currentCategoryId === category.id;
           const path = category.id === "all" ? "/" : `/category/${category.id}`;
+          const count = categoryCounts[category.id] || 0;
           
           return (
             <Link
@@ -72,7 +74,8 @@ const Sidebar = () => {
               )}
             >
               <IconComponent className="w-5 h-5" />
-              {t(category.label.fr, category.label.en)}
+              <span className="flex-1">{t(category.label.fr, category.label.en)}</span>
+              <span className="text-xs text-muted-foreground">{count}</span>
             </Link>
           );
         })}

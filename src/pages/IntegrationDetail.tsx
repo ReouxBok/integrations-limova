@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { getIntegrationBySlug } from "@/lib/integrations-data";
+import { getIntegrationBySlug } from "@/lib/integrations-full-data";
 import { useToast } from "@/hooks/use-toast";
 
 const IntegrationDetail = () => {
