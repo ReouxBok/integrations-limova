@@ -1,18 +1,21 @@
-import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { useMemo } from "react";
+import { Link, useParams } from "react-router-dom";
 import { Search, Blocks, Star } from "lucide-react";
+import { useState } from "react";
 import MainLayout from "@/components/layout/MainLayout";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { integrations, integrationCategories } from "@/lib/integrations-data";
-import { cn } from "@/lib/utils";
 
 const Integrations = () => {
   const { t, language } = useLanguage();
+  const { categoryId } = useParams<{ categoryId?: string }>();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+
+  const selectedCategory = categoryId || "all";
+  const currentCategory = integrationCategories.find(c => c.id === selectedCategory);
 
   const filteredIntegrations = useMemo(() => {
     return integrations.filter((integration) => {
@@ -21,9 +24,7 @@ const Integrations = () => {
         integration.description[language].toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesCategory =
-        selectedCategory === "all" ||
-        integration.category[language].toLowerCase() === 
-          integrationCategories.find(c => c.id === selectedCategory)?.label[language].toLowerCase();
+        selectedCategory === "all" || integration.categoryId === selectedCategory;
 
       return matchesSearch && matchesCategory;
     });
@@ -32,52 +33,36 @@ const Integrations = () => {
   const popularIntegrations = filteredIntegrations.filter(i => i.isPopular);
   const otherIntegrations = filteredIntegrations.filter(i => !i.isPopular);
 
+  const pageTitle = selectedCategory === "all" 
+    ? t("Toutes les intégrations", "All Integrations")
+    : currentCategory?.label[language] || t("Intégrations", "Integrations");
+
   return (
-    <MainLayout title={t("Intégrations IA", "AI Integrations")}>
+    <MainLayout title={pageTitle}>
       <div className="space-y-6">
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
             <Blocks className="w-8 h-8 text-primary" />
-            {t("Intégrations IA", "AI Integrations")}
+            {pageTitle}
           </h1>
           <p className="text-muted-foreground mt-2">
             {t(
-              "Catalogue des intégrations disponibles avec prompts prêts à l'emploi",
-              "Catalog of available integrations with ready-to-use prompts"
+              `${filteredIntegrations.length} intégrations disponibles avec prompts prêts à l'emploi`,
+              `${filteredIntegrations.length} integrations available with ready-to-use prompts`
             )}
           </p>
         </div>
 
-        {/* Search and Filters */}
-        <div className="space-y-4">
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
-              placeholder={t("Rechercher une intégration...", "Search an integration...")}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            {integrationCategories.map((category) => (
-              <Badge
-                key={category.id}
-                variant={selectedCategory === category.id ? "default" : "outline"}
-                className={cn(
-                  "cursor-pointer transition-all hover:scale-105",
-                  selectedCategory === category.id
-                    ? "bg-primary text-primary-foreground"
-                    : "hover:bg-accent"
-                )}
-                onClick={() => setSelectedCategory(category.id)}
-              >
-                {category.label[language]}
-              </Badge>
-            ))}
-          </div>
+        {/* Search */}
+        <div className="relative max-w-md">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+          <Input
+            placeholder={t("Rechercher une intégration...", "Search an integration...")}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
         </div>
 
         {/* Popular Integrations */}
@@ -87,7 +72,7 @@ const Integrations = () => {
               <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
               {t("Populaires", "Popular")}
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {popularIntegrations.map((integration) => (
                 <IntegrationCard key={integration.id} integration={integration} language={language} />
               ))}
@@ -98,10 +83,12 @@ const Integrations = () => {
         {/* Other Integrations */}
         {otherIntegrations.length > 0 && (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">
-              {t("Autres intégrations", "Other Integrations")}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {popularIntegrations.length > 0 && (
+              <h2 className="text-xl font-semibold text-foreground">
+                {t("Autres intégrations", "Other Integrations")}
+              </h2>
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {otherIntegrations.map((integration) => (
                 <IntegrationCard key={integration.id} integration={integration} language={language} />
               ))}
@@ -130,15 +117,15 @@ interface IntegrationCardProps {
 
 const IntegrationCard = ({ integration, language }: IntegrationCardProps) => {
   return (
-    <Link to={`/integrations/${integration.slug}`}>
+    <Link to={`/integration/${integration.slug}`}>
       <Card className="group hover:shadow-lg transition-all duration-300 hover:border-primary/50 cursor-pointer h-full">
-        <CardContent className="p-5">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center overflow-hidden shrink-0">
+        <CardContent className="p-4">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center overflow-hidden shrink-0">
               <img
                 src={integration.logoUrl}
                 alt={integration.name}
-                className="w-8 h-8 object-contain"
+                className="w-6 h-6 object-contain"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
@@ -146,24 +133,19 @@ const IntegrationCard = ({ integration, language }: IntegrationCardProps) => {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors truncate">
                   {integration.name}
                 </h3>
                 {integration.isPopular && (
-                  <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+                  <Star className="w-3 h-3 text-amber-500 fill-amber-500 shrink-0" />
                 )}
               </div>
-              <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+              <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
                 {integration.description[language]}
               </p>
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="text-xs">
-                  {integration.category[language]}
-                </Badge>
-                <Badge variant="outline" className="text-xs">
-                  {integration.actions.length} {language === "fr" ? "actions" : "actions"}
-                </Badge>
-              </div>
+              <Badge variant="outline" className="text-xs">
+                {integration.actions.length} actions
+              </Badge>
             </div>
           </div>
         </CardContent>
