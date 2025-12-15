@@ -15,6 +15,8 @@ import TeamOnboarding from "./pages/TeamOnboarding";
 import Auth from "./pages/Auth";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminImportExcel from "./pages/admin/AdminImportExcel";
+import Integrations from "./pages/Integrations";
+import IntegrationDetail from "./pages/IntegrationDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +40,8 @@ const App = () => (
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/admin/settings" element={<AdminSettings />} />
                 <Route path="/admin/import" element={<AdminImportExcel />} />
+                <Route path="/integrations" element={<Integrations />} />
+                <Route path="/integrations/:slug" element={<IntegrationDetail />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

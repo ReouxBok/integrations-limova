@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, Settings, MessageSquarePlus, LogIn, LogOut, Menu, List, Headphones, GraduationCap, FileSpreadsheet } from "lucide-react";
+import { Home, Settings, MessageSquarePlus, LogIn, LogOut, Menu, List, Headphones, GraduationCap, FileSpreadsheet, Blocks } from "lucide-react";
 import limovaLogo from "@/assets/limova-logo.png";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -20,6 +20,7 @@ const Sidebar = () => {
     { icon: List, label: { fr: "Tous les Feedbacks", en: "All Feedbacks" }, path: "/feedbacks" },
     { icon: Headphones, label: { fr: "Équipe SAV", en: "SAV Team" }, path: "/team/sav" },
     { icon: GraduationCap, label: { fr: "Équipe Onboarding", en: "Onboarding Team" }, path: "/team/onboarding" },
+    { icon: Blocks, label: { fr: "Intégrations IA", en: "AI Integrations" }, path: "/integrations" },
   ];
 
   const adminItems = [
