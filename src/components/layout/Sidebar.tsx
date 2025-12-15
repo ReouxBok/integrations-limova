@@ -1,32 +1,43 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Home, Settings, MessageSquarePlus, LogIn, LogOut, Menu, List, Headphones, GraduationCap, FileSpreadsheet, Blocks } from "lucide-react";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { Menu, Brain, Zap, MessageSquare, Users, Database, Kanban, Code, Megaphone, CreditCard, FileText, Cloud, Share2, BarChart3, Workflow, ShoppingCart, Headphones, Briefcase, Wallet, MoreHorizontal, Blocks } from "lucide-react";
 import limovaLogo from "@/assets/limova-logo.png";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { integrationCategories } from "@/lib/integrations-data";
+
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Blocks,
+  Brain,
+  Zap,
+  MessageSquare,
+  Users,
+  Database,
+  Kanban,
+  Code,
+  Megaphone,
+  CreditCard,
+  FileText,
+  Cloud,
+  Share2,
+  BarChart3,
+  Workflow,
+  ShoppingCart,
+  HeadphonesIcon: Headphones,
+  Briefcase,
+  Wallet,
+  MoreHorizontal,
+};
 
 const Sidebar = () => {
   const location = useLocation();
+  const params = useParams();
   const { t } = useLanguage();
-  const { user, isAdmin, signOut } = useAuth();
   const [open, setOpen] = useState(false);
 
-  const navItems = [
-    { icon: Home, label: { fr: "Tableau de bord", en: "Dashboard" }, path: "/" },
-    { icon: MessageSquarePlus, label: { fr: "Nouveau Feedback", en: "New Feedback" }, path: "/feedback/new" },
-    { icon: List, label: { fr: "Tous les Feedbacks", en: "All Feedbacks" }, path: "/feedbacks" },
-    { icon: Headphones, label: { fr: "Équipe SAV", en: "SAV Team" }, path: "/team/sav" },
-    { icon: GraduationCap, label: { fr: "Équipe Onboarding", en: "Onboarding Team" }, path: "/team/onboarding" },
-    { icon: Blocks, label: { fr: "Intégrations IA", en: "AI Integrations" }, path: "/integrations" },
-  ];
-
-  const adminItems = [
-    { icon: FileSpreadsheet, label: { fr: "Import Excel", en: "Excel Import" }, path: "/admin/import" },
-    { icon: Settings, label: { fr: "Paramètres", en: "Settings" }, path: "/admin/settings" },
-  ];
+  const currentCategoryId = params.categoryId || (location.pathname === "/" ? "all" : null);
 
   const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => (
     <>
@@ -37,14 +48,21 @@ const Sidebar = () => {
       </div>
 
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.path || 
-            (item.path !== "/" && location.pathname.startsWith(item.path));
+        <div className="pb-2">
+          <span className="px-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            {t("Catégories", "Categories")}
+          </span>
+        </div>
+
+        {integrationCategories.map((category) => {
+          const IconComponent = iconMap[category.icon] || Blocks;
+          const isActive = currentCategoryId === category.id;
+          const path = category.id === "all" ? "/" : `/category/${category.id}`;
           
           return (
             <Link
-              key={item.path}
-              to={item.path}
+              key={category.id}
+              to={path}
               onClick={onNavigate}
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
@@ -53,58 +71,14 @@ const Sidebar = () => {
                   : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
               )}
             >
-              <item.icon className="w-5 h-5" />
-              {t(item.label.fr, item.label.en)}
+              <IconComponent className="w-5 h-5" />
+              {t(category.label.fr, category.label.en)}
             </Link>
           );
         })}
-
-        {isAdmin && (
-          <>
-            <div className="pt-6 pb-2">
-              <span className="px-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                {t("Administration", "Administration")}
-              </span>
-            </div>
-
-            {adminItems.map((item) => {
-              const isActive = location.pathname.startsWith(item.path);
-              
-              return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  onClick={onNavigate}
-                  className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
-                    isActive 
-                      ? "bg-sidebar-accent text-sidebar-accent-foreground" 
-                      : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
-                  )}
-                >
-                  <item.icon className="w-5 h-5" />
-                  {t(item.label.fr, item.label.en)}
-                </Link>
-              );
-            })}
-          </>
-        )}
       </nav>
 
-      <div className="p-4 space-y-2">
-        {user ? (
-          <Button variant="ghost" className="w-full justify-start gap-2" onClick={() => { signOut(); onNavigate?.(); }}>
-            <LogOut className="w-4 h-4" />
-            {t("Déconnexion", "Logout")}
-          </Button>
-        ) : (
-          <Button variant="ghost" className="w-full justify-start gap-2" asChild>
-            <Link to="/auth" onClick={onNavigate}>
-              <LogIn className="w-4 h-4" />
-              {t("Connexion Admin", "Admin Login")}
-            </Link>
-          </Button>
-        )}
+      <div className="p-4">
         <p className="text-xs text-muted-foreground text-center">© 2024 Limova</p>
       </div>
     </>

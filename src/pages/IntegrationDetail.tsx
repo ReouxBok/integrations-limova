@@ -23,7 +23,7 @@ const IntegrationDetail = () => {
             {t("Intégration non trouvée", "Integration not found")}
           </p>
           <Button asChild variant="outline">
-            <Link to="/integrations">
+            <Link to="/">
               <ArrowLeft className="w-4 h-4 mr-2" />
               {t("Retour aux intégrations", "Back to integrations")}
             </Link>
@@ -38,7 +38,7 @@ const IntegrationDetail = () => {
       <div className="space-y-6">
         {/* Back button */}
         <Button asChild variant="ghost" size="sm">
-          <Link to="/integrations">
+          <Link to="/">
             <ArrowLeft className="w-4 h-4 mr-2" />
             {t("Retour aux intégrations", "Back to integrations")}
           </Link>
