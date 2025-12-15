@@ -1,6 +1,8 @@
-// Full integration data generator for all 3231 Pipedream integrations
+// Full integration data generator for all Pipedream integrations
 import { allIntegrationSlugs } from "./all-integration-slugs";
-import { formatName, getCategoryId, generatePrompt, categories, popularSlugs } from "./integration-parser";
+import { formatName, categories, popularSlugs } from "./integration-parser";
+import { getCategoryFromSlug } from "./extended-categories";
+import { getActionsForIntegration } from "./comprehensive-actions";
 
 export interface IntegrationAction {
   id: string;
@@ -31,54 +33,6 @@ export interface Category {
 const getCategoryLabel = (categoryId: string): { fr: string; en: string } => {
   const category = categories.find(c => c.id === categoryId);
   return category?.label || { fr: "Autres", en: "Other" };
-};
-
-// Generate default actions for an integration
-const generateDefaultActions = (integrationName: string, slug: string): IntegrationAction[] => {
-  const baseActions = [
-    { 
-      actionKey: "create", 
-      nameFr: "Créer un élément", 
-      nameEn: "Create item",
-      descFr: `Crée un nouvel élément dans ${integrationName}`,
-      descEn: `Create a new item in ${integrationName}`
-    },
-    { 
-      actionKey: "get", 
-      nameFr: "Récupérer des données", 
-      nameEn: "Get data",
-      descFr: `Récupère des données depuis ${integrationName}`,
-      descEn: `Retrieve data from ${integrationName}`
-    },
-    { 
-      actionKey: "update", 
-      nameFr: "Mettre à jour", 
-      nameEn: "Update item",
-      descFr: `Met à jour un élément dans ${integrationName}`,
-      descEn: `Update an item in ${integrationName}`
-    },
-    { 
-      actionKey: "delete", 
-      nameFr: "Supprimer", 
-      nameEn: "Delete item",
-      descFr: `Supprime un élément de ${integrationName}`,
-      descEn: `Delete an item from ${integrationName}`
-    },
-    { 
-      actionKey: "list", 
-      nameFr: "Lister les éléments", 
-      nameEn: "List items",
-      descFr: `Liste les éléments de ${integrationName}`,
-      descEn: `List items from ${integrationName}`
-    },
-  ];
-
-  return baseActions.map(action => ({
-    id: `${slug}_${action.actionKey}`,
-    name: { fr: action.nameFr, en: action.nameEn },
-    description: { fr: action.descFr, en: action.descEn },
-    prompt: generatePrompt(action.nameEn, integrationName)
-  }));
 };
 
 // Extended actions for specific integrations
