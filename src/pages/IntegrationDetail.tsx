@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getIntegrationBySlug } from "@/lib/integrations-full-data";
 import { useToast } from "@/hooks/use-toast";
+import IntegrationLogo from "@/components/integrations/IntegrationLogo";
 
 const IntegrationDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -46,16 +47,12 @@ const IntegrationDetail = () => {
 
         {/* Header */}
         <div className="flex items-start gap-6">
-          <div className="w-20 h-20 rounded-2xl bg-muted flex items-center justify-center overflow-hidden shrink-0">
-            <img
-              src={integration.logoUrl}
-              alt={integration.name}
-              className="w-12 h-12 object-contain"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-              }}
-            />
-          </div>
+          <IntegrationLogo 
+            slug={integration.slug} 
+            name={integration.name} 
+            size="lg"
+            className="rounded-2xl"
+          />
           <div>
             <h1 className="text-3xl font-bold text-foreground">{integration.name}</h1>
             <p className="text-muted-foreground mt-2 max-w-2xl">
