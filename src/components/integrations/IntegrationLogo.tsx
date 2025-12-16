@@ -76,7 +76,12 @@ const brandColors: Record<string, { bg: string; text: string }> = {
 const getLogoUrls = (slug: string): string[] => {
   const urls: string[] = [];
   
-  // Simple Icons CDN for known brands
+  // PRIORITÉ 1: Logo local (cache)
+  // On essaie d'abord PNG, puis SVG
+  urls.push(`/integration-logos/${slug}.png`);
+  urls.push(`/integration-logos/${slug}.svg`);
+  
+  // PRIORITÉ 2: Simple Icons CDN for known brands
   const simpleIconsMap: Record<string, string> = {
     openai: "openai",
     anthropic: "anthropic",

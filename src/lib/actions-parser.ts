@@ -2,6 +2,7 @@
 // This dynamically extracts actions and triggers from the components/ directory structure
 
 import { IntegrationAction } from "./integrations-full-data";
+import { integrationActionsMap as generatedIntegrationActionsMap } from "./generated-actions-map";
 
 // Map folder names to readable action names
 const formatActionName = (folderName: string): { fr: string; en: string } => {
@@ -910,7 +911,7 @@ export const integrationActionsMap: Record<string, { actions: string[]; sources:
 
 // Convert raw action/source names to IntegrationAction format
 export const getActionsFromMap = (slug: string, integrationName: string): IntegrationAction[] => {
-  const data = integrationActionsMap[slug];
+  const data = generatedIntegrationActionsMap[slug] || integrationActionsMap[slug];
   if (!data) return [];
   
   const actions: IntegrationAction[] = [];

@@ -3,7 +3,7 @@ import { allIntegrationSlugs } from "./all-integration-slugs";
 import { formatName, categories, popularSlugs } from "./integration-parser";
 import { getCategoryFromSlug } from "./extended-categories";
 import { getActionsForIntegration } from "./comprehensive-actions";
-import { getActionsFromMap, integrationActionsMap } from "./actions-parser";
+import { getActionsFromMap } from "./actions-parser";
 
 export interface IntegrationAction {
   id: string;
@@ -398,14 +398,15 @@ const generateIntegration = (slug: string): Integration => {
   const categoryLabel = getCategoryLabel(categoryId);
   const isPopular = popularSlugs.includes(slug);
   
-  // Priority: 1) Parsed from components/ 2) Specific hardcoded 3) Generated defaults
+  // Priority: 1) Actions réelles parsées depuis components/ 2) Actions spécifiques 3) Actions génériques
   let actions: IntegrationAction[] = [];
   
-  // Check if we have parsed actions from components/
-  if (integrationActionsMap[slug]) {
-    actions = getActionsFromMap(slug, name);
-  } else {
-    // Fallback to specific actions or generate defaults
+  // 1) Actions exhaustives dérivées du dossier components/
+  actions = getActionsFromMap(slug, name);
+
+  // 2) Si pour une raison quelconque aucune action n'a été trouvée,
+  // on retombe sur les actions spécifiques / génériques existantes.
+  if (actions.length === 0) {
     actions = getSpecificActions(slug, name);
     if (actions.length === 0) {
       actions = getActionsForIntegration(slug, name);
