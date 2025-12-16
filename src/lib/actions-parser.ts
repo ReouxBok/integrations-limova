@@ -17,41 +17,47 @@ const formatActionName = (folderName: string): { fr: string; en: string } => {
 };
 
 // Generate description based on action name
+// ⚠️ Important : on évite d'injecter le nom de l'action (souvent en anglais)
+// dans la version française pour garder un texte 100% FR.
 const generateDescription = (actionName: string, integrationName: string): { fr: string; en: string } => {
   const actionLower = actionName.toLowerCase();
   
   if (actionLower.includes('send')) {
-    return { fr: `Envoie via ${integrationName}`, en: `Send via ${integrationName}` };
+    return { fr: `Envoyer une action via ${integrationName}`, en: `Send an action via ${integrationName}` };
   }
   if (actionLower.includes('create')) {
-    return { fr: `Crée dans ${integrationName}`, en: `Create in ${integrationName}` };
+    return { fr: `Créer une ressource dans ${integrationName}`, en: `Create a resource in ${integrationName}` };
   }
   if (actionLower.includes('update')) {
-    return { fr: `Met à jour dans ${integrationName}`, en: `Update in ${integrationName}` };
+    return { fr: `Mettre à jour une ressource dans ${integrationName}`, en: `Update a resource in ${integrationName}` };
   }
   if (actionLower.includes('delete') || actionLower.includes('remove')) {
-    return { fr: `Supprime de ${integrationName}`, en: `Delete from ${integrationName}` };
+    return { fr: `Supprimer une ressource de ${integrationName}`, en: `Delete a resource from ${integrationName}` };
   }
   if (actionLower.includes('get') || actionLower.includes('find') || actionLower.includes('list')) {
-    return { fr: `Récupère depuis ${integrationName}`, en: `Retrieve from ${integrationName}` };
+    return { fr: `Récupérer des données depuis ${integrationName}`, en: `Retrieve data from ${integrationName}` };
   }
   if (actionLower.includes('add')) {
-    return { fr: `Ajoute à ${integrationName}`, en: `Add to ${integrationName}` };
+    return { fr: `Ajouter des données dans ${integrationName}`, en: `Add data in ${integrationName}` };
   }
   if (actionLower.includes('archive')) {
-    return { fr: `Archive dans ${integrationName}`, en: `Archive in ${integrationName}` };
+    return { fr: `Archiver une ressource dans ${integrationName}`, en: `Archive a resource in ${integrationName}` };
   }
   if (actionLower.includes('download')) {
-    return { fr: `Télécharge depuis ${integrationName}`, en: `Download from ${integrationName}` };
+    return { fr: `Télécharger un fichier depuis ${integrationName}`, en: `Download a file from ${integrationName}` };
   }
   if (actionLower.includes('upload')) {
-    return { fr: `Upload vers ${integrationName}`, en: `Upload to ${integrationName}` };
+    return { fr: `Téléverser un fichier vers ${integrationName}`, en: `Upload a file to ${integrationName}` };
   }
   
-  return { fr: `${actionName} via ${integrationName}`, en: `${actionName} via ${integrationName}` };
+  return {
+    fr: `Effectuer une action dans ${integrationName}`,
+    en: `Perform an action in ${integrationName}`
+  };
 };
 
 // Generate prompt based on action name
+// Même logique : FR et EN sont rédigés proprement, sans intégrer le nom brut de l'action.
 const generatePrompt = (actionName: string, integrationName: string): { fr: string; en: string } => {
   const actionLower = actionName.toLowerCase();
   
@@ -274,8 +280,8 @@ const generatePrompt = (actionName: string, integrationName: string): { fr: stri
   
   // Default prompt
   return {
-    fr: `Exécute "${actionName}" via ${integrationName} avec les paramètres : [paramètres]`,
-    en: `Execute "${actionName}" via ${integrationName} with parameters: [parameters]`
+    fr: `Exécute une action dans ${integrationName} avec les paramètres : [paramètres]`,
+    en: `Execute an action in ${integrationName} with parameters: [parameters]`
   };
 };
 
@@ -927,16 +933,7 @@ export const getActionsFromMap = (slug: string, integrationName: string): Integr
     });
   });
   
-  // Convert sources (triggers) - mark them as triggers
-  data.sources.forEach((sourceFolder) => {
-    const triggerName = formatActionName(sourceFolder);
-    actions.push({
-      id: `${slug}_trigger_${sourceFolder.replace(/-/g, '_')}`,
-      name: { fr: `🔔 ${triggerName.fr}`, en: `🔔 ${triggerName.en}` },
-      description: generateTriggerDescription(triggerName.en, integrationName),
-      prompt: generateTriggerPrompt(triggerName.en, integrationName)
-    });
-  });
+  // On n'expose PAS les sources (triggers) pour le moment : uniquement les actions déclenchées par l'utilisateur.
   
   return actions;
 };
