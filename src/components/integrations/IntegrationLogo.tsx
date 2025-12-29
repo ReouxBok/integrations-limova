@@ -71,15 +71,33 @@ const brandColors: Record<string, { bg: string; text: string }> = {
   woocommerce: { bg: "bg-[#96588A]", text: "text-white" },
   bigcommerce: { bg: "bg-[#121118]", text: "text-white" },
 };
+// Normalize slugs to handle common aliases
+const normalizeSlug = (slug: string): string => {
+  const aliases: Record<string, string> = {
+    slack: "slack_v2",
+    salesforce: "salesforce_rest_api",
+    airtable: "airtable_oauth",
+    google: "google_sheets",
+    telegram: "telegram_bot_api",
+    youtube: "youtube_data_api",
+    firebase: "firebase_admin_sdk",
+    cloudflare: "cloudflare_api_key",
+    vercel: "vercel_token_auth",
+    whatsapp: "whatsapp_business",
+  };
+  return aliases[slug] || slug;
+};
 
 // Logo URLs from multiple reliable CDNs with fallback chain
-const getLogoUrls = (slug: string): string[] => {
+const getLogoUrls = (inputSlug: string): string[] => {
+  const slug = normalizeSlug(inputSlug);
   const urls: string[] = [];
   
   // PRIORITÉ 1: Logo local (cache)
-  // On essaie d'abord PNG, puis SVG
   urls.push(`/integration-logos/${slug}.png`);
   urls.push(`/integration-logos/${slug}.svg`);
+  urls.push(`/integration-logos/${inputSlug}.png`);
+  urls.push(`/integration-logos/${inputSlug}.svg`);
   
   // PRIORITÉ 2: Simple Icons CDN for known brands
   const simpleIconsMap: Record<string, string> = {
@@ -428,9 +446,10 @@ const sizeClasses = {
   lg: { container: "w-16 h-16", icon: "w-10 h-10", text: "text-xl" },
 };
 
-export const IntegrationLogo = ({ slug, name, size = "md", className }: IntegrationLogoProps) => {
+export const IntegrationLogo = ({ slug: inputSlug, name, size = "md", className }: IntegrationLogoProps) => {
+  const slug = normalizeSlug(inputSlug);
   const [currentUrlIndex, setCurrentUrlIndex] = useState(0);
-  const logoUrls = getLogoUrls(slug);
+  const logoUrls = getLogoUrls(inputSlug);
   const sizes = sizeClasses[size];
   
   // Get brand color or fallback to letter-based color
